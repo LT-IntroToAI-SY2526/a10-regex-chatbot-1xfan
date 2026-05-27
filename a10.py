@@ -168,6 +168,35 @@ def get_capital(country: str) -> str:
     match = get_match(infobox_text, pattern, error_text)
     return match.group("capital")#.strip()
 
+def get_currency(country: str) -> str:
+    """Gets the currency of the given country
+
+    Args:
+        country - name of the country
+
+    Returns:
+        currency of the given country
+    """
+    infobox_text = clean_text(get_first_infobox_text(get_page_html(country)))
+    pattern = r"Currency:?\s*(?P<currency>[A-Za-z .-]+)"
+    error_text = "Page infobox has no information about the currency of the country."
+    match = get_match(infobox_text, pattern, error_text)
+    return match.group("currency")#.strip()
+
+def get_language(country: str) -> str:
+    """Gets the currency of the given country
+
+    Args:
+        country - name of the country
+
+    Returns:
+        currency of the given country
+    """
+    infobox_text = clean_text(get_first_infobox_text(get_page_html(country)))
+    pattern = r"Official language(?:s)?:?\s*(?P<language>[A-Z][a-z.-]+)"
+    error_text = "Page infobox has no information about the currency of the country."
+    match = get_match(infobox_text, pattern, error_text)
+    return match.group("language")#.strip()
 
 # below are a set of actions. Each takes a list argument and returns a list of answers
 # according to the action and the argument. It is important that each function returns a
@@ -218,6 +247,28 @@ def capital(matches: List[str]) -> List[str]:
     """
     return [get_capital(" ".join(matches))]
 
+def currency(matches: List[str]) -> List[str]:
+    """Gets the currency of the given country
+
+    Args:
+        country - name of the country
+
+    Returns:
+        currency of the given country
+    """
+    return [get_currency(" ".join(matches))]
+
+def language(matches: List[str]) -> List[str]:
+    """Gets the currency of the given country
+
+    Args:
+        country - name of the country
+
+    Returns:
+        currency of the given country
+    """
+    return [get_language(" ".join(matches))]
+
 # dummy argument is ignored and doesn't matter
 def bye_action(dummy: List[str]) -> None:
     raise KeyboardInterrupt
@@ -235,6 +286,12 @@ pa_list: List[Tuple[Pattern, Action]] = [
     ("when did % die".split(), death_date),
     ("what is the polar radius of %".split(), polar_radius),
     ("what is the capital of %".split(), capital),
+    ("what is the currency of %".split(), currency),
+    ("what currency does % use".split(), currency),
+    ("what is the official language of %".split(), language),
+    ("what is the language of %".split(), language),
+    ("what language does % use".split(), language),
+    ("what do they speak in %".split(), language),
     (["bye"], bye_action),
 ]
 
